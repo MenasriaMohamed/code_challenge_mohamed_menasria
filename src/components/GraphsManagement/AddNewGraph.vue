@@ -1,8 +1,6 @@
 <template>
        <div>
         <b-row >
-          <IEcharts
-            />
           <b-col cols="12"> 
             <b-card title="Graphs List">
               <div>
@@ -26,11 +24,7 @@
 </template>
 
 <script>
-import IEcharts from "echarts";
 export default {
-   components: {
-    IEcharts,
-  },
   data() {
     return {
         isLoadingGraphs : false,
