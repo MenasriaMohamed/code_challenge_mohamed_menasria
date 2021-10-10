@@ -1,20 +1,19 @@
 <template>
   <div id="app">
-      <index />
+    <!--navbar -->
+      <Navbar/>   
+    <!--navbar -->
+    <router-view/>
   </div>
 </template>
-
 <script>
-import index from './components/index'
-
+import Navbar from './layouts/Navbar.vue'
 export default {
-  name: 'App',
   components: {
-    index
+    Navbar
   }
 }
 </script>
-
 <style>
 
 </style>
