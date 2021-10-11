@@ -71,8 +71,8 @@
           {{ row.detailsShowing ? 'Hide' : 'Show' }} Details
         </b-button> -->
         <div>
-          <b-button class="mr-1" pill @click="info(row.item, row.index, $event.target)">Edit</b-button>
-          <b-button class="mr-1" pill  @click="info(row.item, row.index, $event.target)" variant="primary">Details</b-button>
+          <b-button class="text-light mr-1" pill @click="EditGraph(row.item, row.index, $event.target)" variant="primary">Edit</b-button>
+          <b-button class="text-light mr-1" pill  @click="ViewGraph(row.item, row.index, $event.target)" variant="warning">View</b-button>
         </div>
       </template>
 
@@ -131,7 +131,6 @@
 
 <script>
   import IEcharts from 'vue-echarts-v3'
-  // import 'echarts/lib/chart/Graph'
   export default {
     components: {
       IEcharts
@@ -264,8 +263,14 @@
       },
 
       //////////////////////
-      AddGraph(){
+      AddGraph(item, index, button){
 
+      },
+      EditGraph(item, index, button){
+       this.$router.push({ name: 'edit', params: { id: item.id } })
+      },
+      ViewGraph(item, index, button){
+        this.$router.push({ name: 'view', params: { id: item.id } })
       },
       /////////////////////
       info(item, index, button) {

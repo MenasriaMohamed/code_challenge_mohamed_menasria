@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import AddGraph from '../components/GraphsManagement/AddGraph.vue'
 import GraphList from '../components/GraphsManagement/GraphList.vue'
+import ViewGraph from '../components/GraphsManagement/ViewGraph.vue'
 
 Vue.use(VueRouter)
 
@@ -12,6 +13,22 @@ const routes = [
     name: 'graphs',
     component: GraphList
   },
+  {
+    path: '/graphs',
+    name: 'graphs',
+    component: GraphList
+  },
+  {
+    path: '/graphs/:id/edit',
+    name: 'edit',
+    component: ViewGraph
+  },
+  {
+    path: '/graphs/:id',
+    name: 'view',
+    component: ViewGraph
+  },
+  
   {
     path: '/graphs/add',
     name: 'add',
