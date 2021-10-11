@@ -1,7 +1,7 @@
 <template>
 <div>
    <b-container fluid>
-    <b-card :title="graph_name">
+    <b-card title="View Graph" :sub-title="graph_name">
       <div style="height: 450px;">
         <IEcharts  :option="option" :loading="loadingGraph"></IEcharts>
      </div>
@@ -93,7 +93,7 @@
 
         let nodes = this.graphs.nodes.filter(node => node.category ==this.$route.params.id);
         this.option.series[0].data= nodes??[];
-
+        
         let links = this.graphs.links.filter(link => link.graph_id ==this.$route.params.id);
         this.option.series[0].links= links??[];
 
