@@ -29,9 +29,8 @@ const routes = [
     name: 'view',
     component: ViewGraph
   },
-  
   {
-    path: '/graphs/add',
+    path: '/graph/add',
     name: 'add',
     component: AddGraph
   },
