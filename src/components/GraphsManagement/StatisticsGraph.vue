@@ -1,10 +1,48 @@
 <template>
 <div>
    <b-container fluid>
-    <b-card title="Statistics Graph " :sub-title="'Graph : '+node_name">
+    <b-card title="Statistics Graph " :sub-title="'Graph : '+graph_name">
       <div style="height: 450px;">
         <IEcharts  :option="option" :loading="loadingGraph"></IEcharts>
      </div>
+    
+      <div>
+        <b-row>
+          <b-col lg="4" class="my-1">
+             <b-card title="Graph Information">
+                <b-card-text>
+                Graph ID : <strong>{{graph_id}}</strong>
+                </b-card-text>
+                <b-card-text>
+                Graph Name : <strong>{{graph_name}}</strong>
+                </b-card-text>
+                <b-card-text>
+                Nodes Number : <strong>{{nodes_number}}</strong>
+                </b-card-text>
+                <b-card-text>
+                Links Number : <strong>{{links_number}}</strong>
+                </b-card-text>                
+            </b-card> 
+          </b-col>
+          <b-col lg="8" class="my-1">
+             <b-card title="Graph Nodes Information" >
+                <b-table
+                    :items="nodes_list"
+                    :fields="nodes_columns"
+                    stacked="md"
+                    show-empty
+                    small
+                  >
+                </b-table>
+            </b-card>
+          </b-col>
+        </b-row>
+
+      
+     
+      
+      </div>
+    
     </b-card>
   </b-container>
   </div>
@@ -19,9 +57,17 @@
     },
     data() {
       return {
-        
-        node_name : "",
-        
+        graph_id: "",
+        graph_name : "",
+        nodes_number : 0,
+        links_number : 0,
+
+        nodes_list : [],
+        nodes_columns :  [
+          { key: 'node_id', label: 'Node ID', sortable: true, sortDirection: 'desc',class: 'text-center' },
+          { key: 'node_name', label: 'Node tooltip', sortable: true, class: 'text-center' },
+          { key: 'node_neighbors', label: 'Node neighbors', sortable: true, class: 'text-center' },
+        ],
 
         //////////////graph draw info ////////////
         loadingGraph: true,
@@ -80,25 +126,34 @@
                           this.$router.push({ name: 'graphs'})
                           return;
                       }
-                      this.node_name =categorie[0].name;
+                 
                       /////
-                      let nodes = graphs.nodes.filter(node => node.graph_id ==this.$route.params.id);
-                      this.nodes_list= nodes.map(function (node) {
-                          return {
-                              node_id : node.id,
-                              node_name : node.name,
-                              value: node.id,
-                              text : node.id + "#" +node.name
-                            };
-                      });
-                      ///
-                      let links = graphs.links.filter(link => link.graph_id ==this.$route.params.id);
-                      this.links_list= links.map(function (link) {
-                          return {
-                              node_source : link.source,
-                              node_target : link.target,
-                            };
-                      });
+                        let links = graphs.links.filter(link => link.graph_id ==this.$route.params.id);
+                        let nodes = graphs.nodes.filter(node => node.graph_id ==this.$route.params.id);
+                        this.nodes_list= nodes.map(function (node) {
+                            let neighborsLinks = graphs.links.filter(link => link.source ==node.id || link.target ==node.id);
+                            console.log(neighborsLinks);
+                            let neighbors_string = "";
+                            neighborsLinks.forEach(link => {
+                                if(link.source !=node.id){
+                                    console.log()
+                                    neighbors_string = neighbors_string + +" ; "+link.source
+                                }else{
+                                    neighbors_string = neighbors_string + +" ; "+link.target
+                                }
+                                
+                            });
+                            return {
+                                node_id : node.id,
+                                node_name : node.name, 
+                                node_neighbors : neighbors_string,                           
+                                };
+                        });
+
+                        this.graph_id =  categorie[0].id;
+                        this.graph_name = categorie[0].name;           
+                        this.nodes_number = nodes.length,
+                        this.links_number = links.length,
                      
                         this.option.series[0].data= nodes.map(function (node) {
                                   node.category = 0;
@@ -110,11 +165,8 @@
                         this.loadingGraph = false;
               },
             
-            
-      
-            
-           
-
+                  
+                      
       ///////////////
     }
   }

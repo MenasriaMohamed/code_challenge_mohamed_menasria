@@ -1,7 +1,7 @@
 <template>
 <div>
    <b-container fluid>
-    <b-card title="View Graph " :sub-title="'Graph : '+node_name">
+    <b-card title="View Graph " :sub-title="'Graph : '+graph_name">
       <div style="height: 450px;">
         <IEcharts  :option="option" :loading="loadingGraph"></IEcharts>
      </div>
@@ -20,7 +20,7 @@
     data() {
       return {
         
-        node_name : "",
+        graph_name : "",
         
 
         //////////////graph draw info ////////////
@@ -80,7 +80,7 @@
                           this.$router.push({ name: 'graphs'})
                           return;
                       }
-                      this.node_name =categorie[0].name;
+                      this.graph_name =categorie[0].name;
                       /////
                       let nodes = graphs.nodes.filter(node => node.graph_id ==this.$route.params.id);
                       this.nodes_list= nodes.map(function (node) {
