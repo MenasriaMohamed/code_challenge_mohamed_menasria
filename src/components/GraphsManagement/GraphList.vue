@@ -222,7 +222,7 @@
     methods: {
       getGraphsFromLocalStorage(){
          if(localStorage.getItem("graphs")!=null){
-           this.graphs = JSON. parse(localStorage. getItem("graphs"));
+           this.graphs = JSON. parse(localStorage.getItem("graphs"));
 
          }else{
            this.graphs = {

@@ -232,7 +232,7 @@
                 text : this.node_id + "#" +this.node_name
               });
               
-              this.option.series[0].data.push({id: this.node_id , name: this.node_name , symbolSize: 10, category: this.form.graph_id,graph_id : this.form.graph_id})
+              this.option.series[0].data.push({id: this.node_id , name: this.node_name , symbolSize: 10, category: 0,graph_id : this.form.graph_id})
               this.node_id = this.node_id+1;
               this.node_name = "";
               // Add To Graph////
@@ -264,7 +264,7 @@
               });
 
               this.option.series[0].links.push({source: this.selected_node_source+"", target: this.selected_node_target +"", graph_id : this.form.graph_id})
-              console.log(this.option.series[0].links)
+
             },
             getGraphId(){
                   this.loadingGraph = true;
@@ -295,7 +295,7 @@
                                   return a.name;
                         })
                        this.option.series[0].categories.push({
-                          id: this.form.graph_id,
+                          id: 0+"",
                           name: "default name",
                           description: this.form.description,
                           created_at: "",
@@ -306,7 +306,6 @@
 
             ////////////////////////////
              RemoveNode(item, index, button){
-
                 this.nodes_list =  this.nodes_list.filter(node => node.node_id !=item.node_id);
                 this.option.series[0].data=  this.option.series[0].data.filter(node => node.id !=item.node_id);
                 this.links_list = this.links_list.filter(link => (link.node_source != item.node_id &&  link.node_target != item.node_id));
@@ -324,14 +323,17 @@
                 var date = new Date();
                 this.graphs.categories.push({
                     id: this.form.graph_id,
-                    name: this.form.name,
+                    name: this.form.name && this.form.name!=""?this.form.name : "default name",
                     description: this.form.description,
                     created_at: moment(date).format(format),
                     updated_at: ""      
                 });
+                this.option.series[0].data.forEach(element => {
+                  element.category = element.graph_id;
+                });
                 this.graphs.nodes = this.graphs.nodes.concat(this.option.series[0].data);
                 this.graphs.links = this.graphs.links.concat(this.option.series[0].links);
-                console.log(this.graphs);
+               
                 localStorage.setItem("graphs", JSON.stringify(this.graphs));
 
                 ///////// display  alert succes
