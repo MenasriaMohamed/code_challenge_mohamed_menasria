@@ -295,9 +295,7 @@
                         this.option.series[0].data=[];
                         this.option.series[0].links=[];
                         this.option.series[0].categories=[];
-                        this.option.legend[0]= graphs.categories.map(function (a) {
-                                  return a.name;
-                        })
+                        
                        this.option.series[0].categories.push({
                           id: 0+"",
                           name: "default name",

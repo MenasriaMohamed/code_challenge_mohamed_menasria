@@ -1,7 +1,7 @@
 <template>
 <div>
    <b-container fluid>
-    <b-card title="Add Graph ">
+    <b-card title="Edit Graph ">
       <div style="height: 450px;">
         <IEcharts  :option="option" :loading="loadingGraph"></IEcharts>
      </div>
@@ -127,7 +127,7 @@
           </b-col>
         </b-row>
 
-        <b-button  style="margin-top:10px;margin-right:10px" type="submit" variant="primary">Submit</b-button>
+        <b-button  style="margin-top:10px;margin-right:10px" type="submit" variant="primary">Edit</b-button>
         <b-button style="margin-top:10px" type="reset" variant="danger">Reset</b-button>
       </b-form>
         </b-card>
@@ -217,13 +217,66 @@
 
       },
       created(){
-        // this.getGraphId();
-          this.getGraphId()
+          this.initGraph();
       },
       /////
       mounted() {
       },
-      methods: { 
+      methods: {
+            initGraph(){
+                this.loadingGraph = true;
+                 if(!localStorage.getItem("graphs") ){
+                    this.$vToastify.error("il ya un problème , réessayez plus tard!");
+                    this.$router.push({ name: 'graphs'})
+                    return;
+                  }
+                  let graphs = JSON.parse(localStorage.getItem("graphs"));
+                  this.graphs = graphs;
+                  let categorie = this.graphs.categories.filter(categorie => categorie.id ==this.$route.params.id);
+                  if(!categorie || !categorie[0]){
+                      this.$vToastify.error("il ya un problème , réessayez plus tard!");
+                      this.$router.push({ name: 'graphs'})
+                      return;
+                  }
+                this.form.graph_id = categorie[0].id;
+                this.form.name = categorie[0].name;
+                this.form.description= categorie[0].description;
+                /////
+                let nodes = this.graphs.nodes.filter(node => node.graph_id ==this.$route.params.id);
+                this.nodes_list= nodes.map(function (node) {
+                    return {
+                        node_id : node.id,
+                        node_name : node.name,
+                        value: node.id,
+                        text : node.id + "#" +node.name
+                      };
+                });
+                      ///
+                      let links = this.graphs.links.filter(link => link.graph_id ==this.$route.params.id);
+                      this.links_list= links.map(function (link) {
+                          return {
+                              node_source : link.source,
+                              node_target : link.target,
+                            };
+                      });
+                      ////
+                        if(graphs.nodes.length== 0){
+                                this.node_id= 0;
+                              }else{
+                                let maxNodeId =  Math.max.apply(Math, this.graphs.nodes.map(function(node) { return node.id; }))+1;
+                                this.node_id = maxNodeId;
+                        }
+
+                        ////
+                        this.option.series[0].data= nodes.map(function (node) {
+                                  node.category = 0;
+                                  return node;
+                        })
+                        this.option.series[0].links= links;
+                        categorie[0].id = 0+"";
+                        this.option.series[0].categories=categorie;
+                        this.loadingGraph = false;
+            },
             handleSubmitNode(){
               this.nodes_list.push({
                 node_id : this.node_id,
@@ -270,53 +323,16 @@
               this.option.series[0].links.push({source: this.selected_node_source+"", target: this.selected_node_target +"", graph_id : this.form.graph_id})
 
             },
-            getGraphId(){
-                  this.loadingGraph = true;
-                    if(!localStorage.getItem("graphs") ){
-                        this.$vToastify.error("il ya un problème , réessayez plus tard!");
-                        this.$router.push({ name: 'graphs'})
-                      return;
-                    }
-                      let graphs = JSON.parse(localStorage.getItem("graphs"));
-                      this.graphs = graphs;
-                      if(graphs.categories.length == 0){
-                        this.form.graph_id =0;
-                      }else{
-                        ///get the maxId
-                        let maxId =  Math.max.apply(Math, graphs.categories.map(function(categorie) { return categorie.id; }))+1;
-                        this.form.graph_id = maxId;
-                      }
-                      if(graphs.nodes.length== 0){
-                         this.node_id= 0;
-                      }else{
-                         let maxNodeId =  Math.max.apply(Math, this.graphs.nodes.map(function(node) { return node.id; }))+1;
-                         this.node_id = maxNodeId;
-                      }
-                        this.option.series[0].data=[];
-                        this.option.series[0].links=[];
-                        this.option.series[0].categories=[];
-                        this.option.legend[0]= graphs.categories.map(function (a) {
-                                  return a.name;
-                        })
-                       this.option.series[0].categories.push({
-                          id: 0+"",
-                          name: "default name",
-                          description: this.form.description,
-                          created_at: "",
-                          updated_at: ""      
-                        });
-                  this.loadingGraph = false;
-              },
-
             ////////////////////////////
-             RemoveNode(item, index, button){
-                this.nodes_list =  this.nodes_list.filter(node => node.node_id !=item.node_id);
-                this.option.series[0].data=  this.option.series[0].data.filter(node => node.id !=item.node_id);
-                this.links_list = this.links_list.filter(link => (link.node_source != item.node_id &&  link.node_target != item.node_id));
+            RemoveNode(item, index, button){
+                  this.nodes_list =  this.nodes_list.filter(node => node.node_id !=item.node_id);
+                  this.option.series[0].data=  this.option.series[0].data.filter(node => node.id !=item.node_id);
+                  this.links_list = this.links_list.filter(link => (link.node_source != item.node_id &&  link.node_target != item.node_id));
+                  this.option.series[0].links=  this.option.series[0].links.filter(link => (link.source != item.node_id &&  link.target != item.node_id));
               },
               RemoveLink(item, index, button){
-                
-              
+                  this.links_list = this.links_list.filter(link => !(link.node_source == item.node_source &&  link.node_target == item.node_target));
+                  this.option.series[0].links=  this.option.series[0].links.filter(link => !(link.source == item.node_source &&  link.target == item.node_target));
               },
 
             //////////////////////////////:::
@@ -325,23 +341,38 @@
               event.preventDefault()
                 const format = "YYYY-MM-DD HH:mm:ss"
                 var date = new Date();
-                this.graphs.categories.push({
-                    id: this.form.graph_id,
-                    name: this.form.name && this.form.name!=""?this.form.name : "default name",
-                    description: this.form.description,
-                    created_at: moment(date).format(format),
-                    updated_at: ""      
-                });
+                if(!localStorage.getItem("graphs") ){
+                    this.$vToastify.error("il ya un problème , réessayez plus tard!");
+                    this.$router.push({ name: 'graphs'})
+                    return;
+                  }
+                let graphs = JSON.parse(localStorage.getItem("graphs"));
+                let categorie = graphs.categories.filter(categorie => categorie.id ==this.$route.params.id);
+                
+                  if(!categorie || !categorie[0]){
+                      this.$vToastify.error("il ya un problème , réessayez plus tard!");
+                      this.$router.push({ name: 'graphs'})
+                      return;
+                  }
+                 categorie[0].id = this.form.graph_id;
+                 categorie[0].name = this.form.name && this.form.name!=""?this.form.name : "default name";
+                 categorie[0].description= this.form.description;
+                 categorie[0].updated_at = moment(date).format(format);
+                
                 this.option.series[0].data.forEach(element => {
                   element.category = element.graph_id;
                 });
-                this.graphs.nodes = this.graphs.nodes.concat(this.option.series[0].data);
-                this.graphs.links = this.graphs.links.concat(this.option.series[0].links);
-               
-                localStorage.setItem("graphs", JSON.stringify(this.graphs));
+                graphs.links=  graphs.links.filter(link => (link.graph_id != this.form.graph_id));
+                graphs.nodes=  graphs.nodes.filter(node => (node.graph_id != this.form.graph_id));
+
+
+                graphs.nodes = graphs.nodes.concat(this.option.series[0].data);
+                graphs.links = graphs.links.concat(this.option.series[0].links);
+                
+                localStorage.setItem("graphs", JSON.stringify(graphs));
 
                 ///////// display  alert succes
-                this.$vToastify.success("the graph has been added with success!");
+                this.$vToastify.success("the graph has been updated with success!");
                 this.$router.push({ name: 'graphs'})
               return;
             },

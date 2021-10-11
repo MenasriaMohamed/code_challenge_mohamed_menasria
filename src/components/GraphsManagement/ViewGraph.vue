@@ -76,8 +76,7 @@
     methods: {
       getSelectedGraphInfo(){
          this.loadingGraph =true;
-         if(!localStorage.getItem("graphs") ){
-
+         if(!localStorage.getItem("graphs")){
             this.$vToastify.error("il ya un problème , réessayez plus tard!");
             this.$router.push({ name: 'graphs'})
             return;
