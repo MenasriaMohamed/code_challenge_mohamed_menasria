@@ -59,7 +59,7 @@
 
                     <template #cell(actions)="row">
                       <div>
-                        <b-button class="text-light mr-1" pill  @click="RemoveGraph(row.item, row.index, $event.target)" variant="danger">Remove</b-button>
+                        <b-button class="text-light mr-1" pill  @click="RemoveNode(row.item, row.index, $event.target)" variant="danger">Remove</b-button>
                       </div>
                     </template>
                   </b-table>
@@ -103,7 +103,7 @@
                   >
                     <template #cell(actions)="row">
                       <div>
-                        <b-button class="text-light mr-1" pill  @click="RemoveGraph(row.item, row.index, $event.target)" variant="danger">Remove</b-button>
+                        <b-button class="text-light mr-1" pill  @click="RemoveLink(row.item, row.index, $event.target)" variant="danger">Remove</b-button>
                       </div>
                     </template>
                   </b-table>
@@ -227,7 +227,7 @@
             handleSubmitNode(){
               this.nodes_list.push({
                 node_id : this.node_id,
-                node_name : this.node_name&& this.node_name!=""?this.node_name :"default name",
+                node_name : this.node_name && this.node_name!=""?this.node_name :"default name",
                 value: this.node_id,
                 text : this.node_id + "#" +this.node_name
               });
@@ -240,12 +240,13 @@
               this.$vToastify.success("the node has been added with success!");
             },
             handleSubmitLink(){
-                
-              if(!this.selected_node_source || !this.selected_node_target ){
+                  console.log(this.selected_node_source )
+                   console.log(this.selected_node_target )
+              if(this.selected_node_source==null || this.selected_node_target==null ){
                 this.$vToastify.error("source and target nodes are required!")
                 return;
               }
-              if(this.selected_node_source == this.selected_node_target){
+                if(this.selected_node_source == this.selected_node_target){
                  this.$vToastify.error("source and target are the same!")
                  return;
               }
@@ -264,7 +265,6 @@
               });
 
               this.option.series[0].links.push({source: this.selected_node_source+"", target: this.selected_node_target +"", graph_id : this.form.graph_id})
-              console.log(this.option.series[0].links)
             },
             getGraphId(){
                   this.loadingGraph = true;
@@ -304,37 +304,51 @@
                   this.loadingGraph = false;
               },
 
-       
-               
-       onSubmit(event) {
-         event.preventDefault()
-          const format = "YYYY-MM-DD HH:mm:ss"
-          var date = new Date();
-          this.graphs.categories.push({
-              id: this.form.graph_id,
-              name: this.form.name,
-              description: this.form.description,
-              created_at: moment(date).format(format),
-              updated_at: ""      
-           });
-          localStorage.setItem("graphs", JSON.stringify(this.graphs));
+            ////////////////////////////
+             RemoveNode(item, index, button){
 
-          ///////// display  alert succes
-          this.$vToastify.success("the graph has been added with success!");
-           this.$router.push({ name: 'graphs'})
-         return;
-      },
-      onReset(event) {
-        event.preventDefault()
-        // Reset our form values
-          this.form.name= "",
-          this.form.description= "",
-        // Trick to reset/clear native browser form validation state
-         this.show = false
-        this.$nextTick(() => {
-          this.show = true
-        })
-      }
+                this.nodes_list =  this.nodes_list.filter(node => node.node_id !=item.node_id);
+                this.option.series[0].data=  this.option.series[0].data.filter(node => node.id !=item.node_id);
+                this.links_list = this.links_list.filter(link => (link.node_source != item.node_id &&  link.node_target != item.node_id));
+              },
+              RemoveLink(item, index, button){
+                
+              
+              },
+
+            //////////////////////////////:::
+      
+            onSubmit(event) {
+              event.preventDefault()
+                const format = "YYYY-MM-DD HH:mm:ss"
+                var date = new Date();
+                this.graphs.categories.push({
+                    id: this.form.graph_id,
+                    name: this.form.name,
+                    description: this.form.description,
+                    created_at: moment(date).format(format),
+                    updated_at: ""      
+                });
+                this.graphs.nodes = this.graphs.nodes.concat(this.option.series[0].data);
+                this.graphs.links = this.graphs.nodes.concat(this.option.series[0].links);
+                localStorage.setItem("graphs", JSON.stringify(this.graphs));
+
+                ///////// display  alert succes
+                this.$vToastify.success("the graph has been added with success!");
+                this.$router.push({ name: 'graphs'})
+              return;
+            },
+            onReset(event) {
+              event.preventDefault()
+              // Reset our form values
+                this.form.name= "",
+                this.form.description= "",
+              // Trick to reset/clear native browser form validation state
+              this.show = false
+              this.$nextTick(() => {
+                this.show = true
+              })
+            }
 
       ///////////////
     
