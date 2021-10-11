@@ -262,7 +262,24 @@
 
       //////////////////////
       RemoveGraph(item, index, button){
-        alert("delete")
+        this.graphs.links= this.graphs.links.filter(link => (link.graph_id != item.id));
+        this.graphs.nodes= this.graphs.nodes.filter(node => (node.graph_id != item.id));
+        this.graphs.categories= this.graphs.categories.filter(categorie => (categorie.id != item.id));
+        this.graphs.categories.forEach(function (categorie, categorie_index, array) {
+          let nodes_by_categorie= this.graphs.nodes.filter(node => (node.graph_id == categorie.id));
+          nodes_by_categorie.forEach(element => {
+            element.category = categorie_index;
+            element.graph_id = categorie_index;
+          });
+          let links_by_categorie= this.graphs.links.filter(link => (link.graph_id == categorie.id));
+          links_by_categorie.forEach(element => {
+            element.graph_id = categorie_index;
+          });
+          categorie.id = categorie_index;
+        }.bind(this));
+        localStorage.setItem("graphs", JSON.stringify(this.graphs));
+        this.initGraphs();
+        this.insertGraphsInTable();
       },
       /////////////////////
       info(item, index, button) {
