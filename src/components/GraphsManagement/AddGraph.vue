@@ -232,7 +232,7 @@
                 text : this.node_id + "#" +this.node_name
               });
               
-              this.option.series[0].data.push({id: this.node_id , name: this.node_name , symbolSize: 10, category: 0,graph_id : this.form.graph_id})
+              this.option.series[0].data.push({id: this.node_id , name: this.node_name , symbolSize: 10, category: this.form.graph_id,graph_id : this.form.graph_id})
               this.node_id = this.node_id+1;
               this.node_name = "";
               // Add To Graph////
