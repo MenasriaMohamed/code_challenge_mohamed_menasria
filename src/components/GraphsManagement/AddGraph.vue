@@ -264,6 +264,7 @@
               });
 
               this.option.series[0].links.push({source: this.selected_node_source+"", target: this.selected_node_target +"", graph_id : this.form.graph_id})
+              console.log(this.option.series[0].links)
             },
             getGraphId(){
                   this.loadingGraph = true;
@@ -329,7 +330,8 @@
                     updated_at: ""      
                 });
                 this.graphs.nodes = this.graphs.nodes.concat(this.option.series[0].data);
-                this.graphs.links = this.graphs.nodes.concat(this.option.series[0].links);
+                this.graphs.links = this.graphs.links.concat(this.option.series[0].links);
+                console.log(this.graphs);
                 localStorage.setItem("graphs", JSON.stringify(this.graphs));
 
                 ///////// display  alert succes
