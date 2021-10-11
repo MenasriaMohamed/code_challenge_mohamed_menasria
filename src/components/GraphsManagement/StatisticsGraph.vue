@@ -132,17 +132,28 @@
                         let nodes = graphs.nodes.filter(node => node.graph_id ==this.$route.params.id);
                         this.nodes_list= nodes.map(function (node) {
                             let neighborsLinks = graphs.links.filter(link => link.source ==node.id || link.target ==node.id);
-                            console.log(neighborsLinks);
+                            
                             let neighbors_string = "";
-                            neighborsLinks.forEach(link => {
-                                if(link.source !=node.id){
-                                    console.log()
-                                    neighbors_string = neighbors_string + +" ; "+link.source
+                           
+                            neighborsLinks.forEach(function (value, index, array) {
+                                if(index +1 ==array.length ){
+                                    if(value.source !=node.id){  
+                                        neighbors_string = neighbors_string  +value.source
+                                    }else{
+                                        neighbors_string = neighbors_string  +value.target
+                                    }
                                 }else{
-                                    neighbors_string = neighbors_string + +" ; "+link.target
+                                    if(value.source !=node.id){  
+                                        neighbors_string = neighbors_string  +value.source+" . "
+                                    }else{
+                                        neighbors_string = neighbors_string  +value.target+" . "
+                                    }
                                 }
                                 
+
+                                
                             });
+                             console.log(neighbors_string)
                             return {
                                 node_id : node.id,
                                 node_name : node.name, 
