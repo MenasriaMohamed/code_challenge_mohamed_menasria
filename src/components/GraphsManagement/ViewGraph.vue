@@ -77,13 +77,15 @@
       getSelectedGraphInfo(){
          this.loadingGraph =true;
          if(!localStorage.getItem("graphs") ){
-              //// display error notification and back to home
+            this.$vToastify.error("il ya un problème , réessayez plus tard!");
+            this.$router.push({ name: 'graphs'})
             return;
          }
         this.graphs = JSON.parse(localStorage.getItem("graphs"));
         let categorie = this.graphs.categories.filter(categorie => categorie.id ==this.$route.params.id);
         if(!categorie || !categorie[0]){
-            //// display error notification and back to home
+            this.$vToastify.error("il ya un problème , réessayez plus tard!");
+            this.$router.push({ name: 'graphs'})
             return;
         }
         this.option.series[0].categories=this.graphs.categories;
@@ -93,7 +95,7 @@
 
         let nodes = this.graphs.nodes.filter(node => node.category ==this.$route.params.id);
         this.option.series[0].data= nodes??[];
-        
+
         let links = this.graphs.links.filter(link => link.graph_id ==this.$route.params.id);
         this.option.series[0].links= links??[];
 
