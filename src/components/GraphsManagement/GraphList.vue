@@ -212,11 +212,7 @@
            this.graphs = JSON. parse(localStorage.getItem("graphs"));
 
          }else{
-           this.graphs = {
-             nodes :[],
-             links :[],
-             categories:[],
-           }
+           this.graphs = this.defaultGraphs();
            localStorage.setItem("graphs", JSON.stringify(this.graphs));
          }
       },
@@ -294,6 +290,171 @@
       onFiltered(filteredItems) {
         this.totalRows = filteredItems.length
         this.currentPage = 1
+      },
+
+      //// return 2 graphs as default graphs is localStorage is empty
+      defaultGraphs(){
+        return {
+              "nodes": [
+                  {
+                      "id": 0,
+                      "name": "N0",
+                      "symbolSize": 10,
+                      "category": 0,
+                      "graph_id": 0
+                  },
+                  {
+                      "id": 1,
+                      "name": "N1",
+                      "symbolSize": 10,
+                      "category": 0,
+                      "graph_id": 0
+                  },
+                  {
+                      "id": 2,
+                      "name": "N2",
+                      "symbolSize": 10,
+                      "category": 0,
+                      "graph_id": 0
+                  },
+                  {
+                      "id": 3,
+                      "name": "N3",
+                      "symbolSize": 10,
+                      "category": 0,
+                      "graph_id": 0
+                  },
+                  {
+                      "id": 4,
+                      "name": "N4",
+                      "symbolSize": 10,
+                      "category": 0,
+                      "graph_id": 0
+                  },
+                  {
+                      "id": 5,
+                      "name": "N5",
+                      "symbolSize": 10,
+                      "category": 0,
+                      "graph_id": 0
+                  },
+                  {
+                      "id": 6,
+                      "name": "N6",
+                      "symbolSize": 10,
+                      "category": 1,
+                      "graph_id": 1
+                  },
+                  {
+                      "id": 7,
+                      "name": "N7",
+                      "symbolSize": 10,
+                      "category": 1,
+                      "graph_id": 1
+                  },
+                  {
+                      "id": 8,
+                      "name": "N8",
+                      "symbolSize": 10,
+                      "category": 1,
+                      "graph_id": 1
+                  },
+                  {
+                      "id": 9,
+                      "name": "N9",
+                      "symbolSize": 10,
+                      "category": 1,
+                      "graph_id": 1
+                  },
+                  {
+                      "id": 10,
+                      "name": "N10",
+                      "symbolSize": 10,
+                      "category": 1,
+                      "graph_id": 1
+                  },
+                  {
+                      "id": 11,
+                      "name": "N11",
+                      "symbolSize": 10,
+                      "category": 1,
+                      "graph_id": 1
+                  }
+              ],
+              "links": [
+                  {
+                      "source": "0",
+                      "target": "3",
+                      "graph_id": 0
+                  },
+                  {
+                      "source": "2",
+                      "target": "3",
+                      "graph_id": 0
+                  },
+                  {
+                      "source": "5",
+                      "target": "3",
+                      "graph_id": 0
+                  },
+                  {
+                      "source": "1",
+                      "target": "5",
+                      "graph_id": 0
+                  },
+                  {
+                      "source": "1",
+                      "target": "0",
+                      "graph_id": 0
+                  },
+                  {
+                      "source": "4",
+                      "target": "0",
+                      "graph_id": 0
+                  },
+                  {
+                      "source": "6",
+                      "target": "8",
+                      "graph_id": 1
+                  },
+                  {
+                      "source": "11",
+                      "target": "10",
+                      "graph_id": 1
+                  },
+                  {
+                      "source": "7",
+                      "target": "8",
+                      "graph_id": 1
+                  },
+                  {
+                      "source": "11",
+                      "target": "6",
+                      "graph_id": 1
+                  },
+                  {
+                      "source": "9",
+                      "target": "8",
+                      "graph_id": 1
+                  }
+              ],
+              "categories": [
+                  {
+                      "id": 0,
+                      "name": "G1",
+                      "description": "G1",
+                      "created_at": "2021-10-11 23:43:09",
+                      "updated_at": ""
+                  },
+                  {
+                      "id": 1,
+                      "name": "G2",
+                      "description": "G2",
+                      "created_at": "2021-10-11 23:44:42",
+                      "updated_at": ""
+                  }
+              ]
+          }
       }
     }
   }
