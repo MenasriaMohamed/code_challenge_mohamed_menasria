@@ -240,9 +240,8 @@
               this.$vToastify.success("the node has been added with success!");
             },
             handleSubmitLink(){
-                  console.log(this.selected_node_source )
-                   console.log(this.selected_node_target )
-              if(this.selected_node_source==null || this.selected_node_target==null ){
+                 
+              if(this.selected_node_source===null || this.selected_node_target===null ){
                 this.$vToastify.error("source and target nodes are required!")
                 return;
               }
