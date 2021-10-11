@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import AddGraph from '../components/GraphsManagement/AddGraph.vue'
 import GraphList from '../components/GraphsManagement/GraphList.vue'
 import ViewGraph from '../components/GraphsManagement/ViewGraph.vue'
+import EditGraph from '../components/GraphsManagement/EditGraph.vue'
 
 Vue.use(VueRouter)
 
@@ -21,7 +22,7 @@ const routes = [
   {
     path: '/graphs/:id/edit',
     name: 'edit',
-    component: ViewGraph
+    component: EditGraph
   },
   {
     path: '/graphs/:id',
