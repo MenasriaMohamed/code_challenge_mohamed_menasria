@@ -1,11 +1,17 @@
 <template>
 <div>
    <b-container fluid>
-    <b-card title="List graphs">
-      <div title="List graphs" style="height: 450px;">
-        <IEcharts  :option="option" :loading="loading"></IEcharts>
+    <b-card :title="graph_name">
+      <div style="height: 450px;">
+        <IEcharts  :option="option" :loading="loadingGraph"></IEcharts>
      </div>
         <!-- User Interface controls -->
+        <div>
+  <b-card :title="graph_name">
+    <b-card-text>Nodes  Number :<strong> {{nb_nodes}}</strong></b-card-text>
+    <b-card-text>Links  Number : <strong>{{nb_links}}</strong></b-card-text>
+  </b-card>
+</div>
     </b-card>
   </b-container>
   </div>
@@ -19,8 +25,11 @@
     },
     data() {
       return {
+        graph_name : "",
+        nb_nodes :0,
+        nb_links:0,
         //////////////graph draw info ////////////
-        loading: false,
+        loadingGraph: true,
         ///////////////////
           graphs  : {
              nodes :[],
@@ -54,7 +63,6 @@
             ]
           },
         //////////////////////
-        graph_List: [],
       }
     },
     computed: {
@@ -64,13 +72,10 @@
          this.getSelectedGraphInfo()
     },
     mounted() {
-      // Set the initial number of items
-      this.totalRows = this.graph_List.length
-      this.initGraphs();
-      this.insertGraphsInTable();
     },
     methods: {
       getSelectedGraphInfo(){
+         this.loadingGraph =true;
          if(!localStorage.getItem("graphs") ){
               //// display error notification and back to home
             return;
@@ -81,36 +86,30 @@
             //// display error notification and back to home
             return;
         }
-        let nodes = this.graphs.nodes.filter(node => node.category ==this.$route.params.id);
-        
-        console.log(nodes);
-
-      },
-      initGraphs(){
-        this.option.series[0].data=this.graphs.nodes;
-        this.option.series[0].links=this.graphs.links;
         this.option.series[0].categories=this.graphs.categories;
         this.option.legend[0]= this.graphs.categories.map(function (a) {
                   return a.name;
-         })
-      },
-      insertGraphsInTable(){
-       let graph_List= this.graphs && this.graphs.categories? this.graphs.categories :[];
-       this.graph_List = graph_List.map(function (
-                value,
-                index
-              ) {
-                return {
-                  id : value.id,
-                  graph_name: value.name,
-                  description: value.description,
-                  created_at: value.created_at,
-                  updated_at: value.updated_at,
-                };
-              });
-      },
+        })
 
+        let nodes = this.graphs.nodes.filter(node => node.category ==this.$route.params.id);
+        this.option.series[0].data= nodes??[];
+
+        let links = this.graphs.links.filter(link => link.graph_id ==this.$route.params.id);
+        this.option.series[0].links= links??[];
+
+
+        //////////// Detail Info  //////////////////
+        this.graph_name = "Graph : "+categorie[0].name
+        this.nb_nodes=nodes.length;
+        this.nb_links= links.length;
+        //////////////
+
+        this.loadingGraph =false;
+      },
      
+
+
+
     }
   }
 </script>
