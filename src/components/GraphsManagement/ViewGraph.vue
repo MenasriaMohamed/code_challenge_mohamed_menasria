@@ -1,17 +1,10 @@
 <template>
 <div>
    <b-container fluid>
-    <b-card title="View Graph" :sub-title="graph_name">
+    <b-card title="View Graph " :sub-title="'Graph : '+node_name">
       <div style="height: 450px;">
         <IEcharts  :option="option" :loading="loadingGraph"></IEcharts>
      </div>
-        <!-- User Interface controls -->
-        <div>
-  <b-card :title="graph_name">
-    <b-card-text>Nodes  Number :<strong> {{nb_nodes}}</strong></b-card-text>
-    <b-card-text>Links  Number : <strong>{{nb_links}}</strong></b-card-text>
-  </b-card>
-</div>
     </b-card>
   </b-container>
   </div>
@@ -19,23 +12,20 @@
 
 <script>
   import IEcharts from 'vue-echarts-v3'
+  import moment from 'moment'
   export default {
     components: {
       IEcharts
     },
     data() {
       return {
-        graph_name : "",
-        nb_nodes :0,
-        nb_links:0,
+        
+        node_name : "",
+        
+
         //////////////graph draw info ////////////
         loadingGraph: true,
-        ///////////////////
-          graphs  : {
-             nodes :[],
-             links :[],
-             categories:[],
-           },
+       
           option : {
             tooltip: {},
             legend: [
@@ -46,7 +36,7 @@
             ],
             series: [
               {
-                name: 'Les graphs',
+                name: 'Add Graph',
                 type: 'graph',
                 layout: 'force',
                 data: null,
@@ -65,53 +55,67 @@
         //////////////////////
       }
     },
-    computed: {
+      computed: {
 
-    },
-    created(){
-         this.getSelectedGraphInfo()
-    },
-    mounted() {
-    },
-    methods: {
-      getSelectedGraphInfo(){
-         this.loadingGraph =true;
-         if(!localStorage.getItem("graphs")){
-            this.$vToastify.error("il ya un problème , réessayez plus tard!");
-            this.$router.push({ name: 'graphs'})
-            return;
-         }
-        this.graphs = JSON.parse(localStorage.getItem("graphs"));
-        let categorie = this.graphs.categories.filter(categorie => categorie.id ==this.$route.params.id);
-        if(!categorie || !categorie[0]){
-            this.$vToastify.error("il ya un problème , réessayez plus tard!");
-            this.$router.push({ name: 'graphs'})
-            return;
-        }
-        this.option.series[0].categories=this.graphs.categories;
-        this.option.legend[0]= this.graphs.categories.map(function (a) {
-                  return a.name;
-        })
-
-        let nodes = this.graphs.nodes.filter(node => node.category ==this.$route.params.id);
-        this.option.series[0].data= nodes??[];
-
-        let links = this.graphs.links.filter(link => link.graph_id ==this.$route.params.id);
-        this.option.series[0].links= links??[];
-
-
-        //////////// Detail Info  //////////////////
-        this.graph_name = "Graph : "+categorie[0].name
-        this.nb_nodes=nodes.length;
-        this.nb_links= links.length;
-        //////////////
-
-        this.loadingGraph =false;
       },
-     
+      created(){
+          this.initGraph();
+      },
+      /////
+      mounted() {
+      },
+      methods: {
+              initGraph(){
+                    this.loadingGraph = true;
+                    if(!localStorage.getItem("graphs") ){
+                        this.$vToastify.error("il ya un problème , réessayez plus tard!");
+                        this.$router.push({ name: 'graphs'})
+                        return;
+                      }
+                      let graphs = JSON.parse(localStorage.getItem("graphs"));
+                    
+                      let categorie = graphs.categories.filter(categorie => categorie.id ==this.$route.params.id);
+                      if(!categorie || !categorie[0]){
+                          this.$vToastify.error("il ya un problème , réessayez plus tard!");
+                          this.$router.push({ name: 'graphs'})
+                          return;
+                      }
+                      this.node_name =categorie[0].name;
+                      /////
+                      let nodes = graphs.nodes.filter(node => node.graph_id ==this.$route.params.id);
+                      this.nodes_list= nodes.map(function (node) {
+                          return {
+                              node_id : node.id,
+                              node_name : node.name,
+                              value: node.id,
+                              text : node.id + "#" +node.name
+                            };
+                      });
+                      ///
+                      let links = graphs.links.filter(link => link.graph_id ==this.$route.params.id);
+                      this.links_list= links.map(function (link) {
+                          return {
+                              node_source : link.source,
+                              node_target : link.target,
+                            };
+                      });
+                     
+                        this.option.series[0].data= nodes.map(function (node) {
+                                  node.category = 0;
+                                  return node;
+                        })
+                        this.option.series[0].links= links;
+                        categorie[0].id = 0+"";
+                        this.option.series[0].categories=categorie;
+                        this.loadingGraph = false;
+              },
+            
+            
+      
+            
+           
 
-
-
+      ///////////////
     }
   }
 </script>
