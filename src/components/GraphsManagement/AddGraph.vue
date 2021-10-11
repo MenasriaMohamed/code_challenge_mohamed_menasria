@@ -119,7 +119,7 @@
                   <b-form-group
                     label="Node Target :"
                   >
-                      <b-form-select v-model="selected_node_target" :options="nodes_list" size="sm" class="mt-3"></b-form-select>
+                      <b-form-select v-model="selected_node_target" :options="nodes_list"></b-form-select>
                   </b-form-group>
               </b-modal>
           
@@ -240,11 +240,15 @@
               this.$vToastify.success("the node has been added with success!");
             },
             handleSubmitLink(){
-                 
-              if(this.selected_node_source===null || this.selected_node_target===null ){
-                this.$vToastify.error("source and target nodes are required!")
-                return;
-              }
+                if(this.selected_node_source===null ){
+                  this.$vToastify.error("source node are required!")
+                  return;
+                }
+                if( this.selected_node_target===null ){
+                  this.$vToastify.error("target node are required!")
+                  return;
+                }  
+              
                 if(this.selected_node_source == this.selected_node_target){
                  this.$vToastify.error("source and target are the same!")
                  return;
