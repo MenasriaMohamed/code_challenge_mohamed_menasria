@@ -67,7 +67,8 @@
         <div>
           <b-button class="text-light mr-1" pill @click="EditGraph(row.item, row.index, $event.target)" variant="success">Edit</b-button>
           <b-button class="text-light mr-1" pill  @click="ViewGraph(row.item, row.index, $event.target)" variant="secondary">View</b-button>
-           <b-button class="text-light mr-1" pill  @click="RemoveGraph(row.item, row.index, $event.target)" variant="danger">Remove</b-button>
+          <b-button class="text-light mr-1" pill  @click="StatisticsGraph(row.item, row.index, $event.target)" variant="secondary">Statistics</b-button>
+          <b-button class="text-light mr-1" pill  @click="RemoveGraph(row.item, row.index, $event.target)" variant="danger">Remove</b-button>
         </div>
       </template>
 
@@ -133,39 +134,25 @@
     data() {
       return {
         //////////////graph draw info ////////////
-        loading: false,
-        ///////////////////
+          loading: false,
           graphs  : {
              nodes :[],
              links :[],
              categories:[],
            },
       option : {
-            // title: {
-            //   text: 'Les graph',
-            //   subtext: 'Default layout',
-            //   top: 'bottom',
-            //   left: 'right'
-            // },
             tooltip: {},
             legend: [
               {
                  selectedMode: 'single',
-                // data: graph.categories.map(function (a) {
-                //   return a.name;
-                // })
-                data : null,
+                 data : null,
               }
             ],
             series: [
               {
                 name: 'Les graphs',
                 type: 'graph',
-                 layout: 'force',
-                // data: graph.nodes,
-                // links: graph.links,
-                // categories: graph.categories,
-
+                 layout: 'force',             
                 data: null,
                 links: null,
                 categories: null,
@@ -264,8 +251,13 @@
       EditGraph(item, index, button){
        this.$router.push({ name: 'edit', params: { id: item.id } })
       },
+      ///////////
       ViewGraph(item, index, button){
         this.$router.push({ name: 'view', params: { id: item.id } })
+      },
+      /////
+      StatisticsGraph(item, index, button){
+        this.$router.push({ name: 'statistics', params: { id: item.id } })
       },
 
       //////////////////////

@@ -5,6 +5,7 @@ import AddGraph from '../components/GraphsManagement/AddGraph.vue'
 import GraphList from '../components/GraphsManagement/GraphList.vue'
 import ViewGraph from '../components/GraphsManagement/ViewGraph.vue'
 import EditGraph from '../components/GraphsManagement/EditGraph.vue'
+import StatisticsGraph from '../components/GraphsManagement/StatisticsGraph.vue'
 
 Vue.use(VueRouter)
 
@@ -23,6 +24,11 @@ const routes = [
     path: '/graphs/:id/edit',
     name: 'edit',
     component: EditGraph
+  },
+  {
+    path: '/graphs/:id/statistics',
+    name: 'statistics',
+    component: StatisticsGraph
   },
   {
     path: '/graphs/:id',
