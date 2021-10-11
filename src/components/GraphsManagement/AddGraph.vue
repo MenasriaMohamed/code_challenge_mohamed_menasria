@@ -316,8 +316,8 @@
                   this.option.series[0].links=  this.option.series[0].links.filter(link => (link.source != item.node_id &&  link.target != item.node_id));
               },
               RemoveLink(item, index, button){
-                alert("remove")
-                this.links_list = this.links_list.filter(link => (link.node_source != item.node_id &&  link.node_target != item.node_id));
+                  this.links_list = this.links_list.filter(link => !(link.node_source == item.node_source &&  link.node_target == item.node_target));
+                  this.option.series[0].links=  this.option.series[0].links.filter(link => !(link.source == item.node_source &&  link.target == item.node_target));
               },
 
             //////////////////////////////:::
